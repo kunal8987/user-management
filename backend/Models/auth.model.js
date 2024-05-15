@@ -18,12 +18,16 @@ const authSchema = new mongoose.Schema(
       required: true,
     },
     otp: {
-      type: Number,
+      type: String,
       required: true,
     },
     emailConfirmed: {
       type: Boolean,
       default: false,
+    },
+    role: {
+      type: String,
+      default: "user",
     },
   },
   {
@@ -32,6 +36,6 @@ const authSchema = new mongoose.Schema(
   }
 );
 
-const Auth = mongoose.model("Auth", authSchema);
+const AuthModel = mongoose.model("Auth", authSchema);
 
-module.exports = { Auth };
+module.exports = { AuthModel };

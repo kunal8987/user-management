@@ -1,5 +1,6 @@
 const express = require("express");
 const { authRouter } = require("./Routes/auth.router");
+const connection = require("./Utility/database");
 
 //DEFINE APP USING EXPRESS
 const app = express();
@@ -22,9 +23,11 @@ app.use((error, req, res, next) => {
 });
 
 //SERVER LISTEN AT PORT
-app.listen(3200, (req, res) => {
+let port = process.env.PORT || 3200;
+app.listen(port, (req, res) => {
   try {
-    console.log("listening on port");
+    connection();
+    console.log('Server Is Listing On Port ' + port);
   } catch (error) {
     console.log(error.message);
     console.log(error);
