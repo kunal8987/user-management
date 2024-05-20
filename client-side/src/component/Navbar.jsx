@@ -1,115 +1,108 @@
 import React from "react";
+import { Menu, X } from "lucide-react";
 import LocalButtons from "./authButton";
+
+const menuItems = [
+  {
+    name: "Home",
+    href: "#",
+  },
+  {
+    name: "Profile",
+    href: "#",
+  },
+  
+];
+
 const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <header className="bg-[#C7C8CC]">
-      <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <div className="md:flex md:items-center md:gap-12">
-            <a
-              className="block text-teal-900 w-12 h-12 outline-none rounded-full ring-offset-2 ring-gray-200 lg:focus:ring-2"
-              href="#"
-            >
-              <span className="sr-only">Home</span>
-              <img
-                className="w-full h-full rounded-full"
-                src="https://cdn.pixabay.com/photo/2016/04/15/18/05/computer-1331579_640.png"
-                alt="logo"
-              />
-            </a>
-          </div>
-
-          <div className="hidden md:block">
-            <nav aria-label="Global">
-              <ul className="flex items-center gap-6 text-lg">
-                <li>
-                  <a
-                    className="text-gray-900 transition hover:text-gray-500/75"
-                    href="#"
-                  >
-                    {" "}
-                    About{" "}
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    className="text-gray-900 transition hover:text-gray-500/75"
-                    href="#"
-                  >
-                    {" "}
-                    Careers{" "}
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    className="text-gray-900 transition hover:text-gray-500/75"
-                    href="#"
-                  >
-                    {" "}
-                    History{" "}
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    className="text-gray-900 transition hover:text-gray-500/75"
-                    href="#"
-                  >
-                    {" "}
-                    Services{" "}
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    className="text-gray-900 transition hover:text-gray-500/75"
-                    href="#"
-                  >
-                    {" "}
-                    Projects{" "}
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    className="text-gray-900 transition hover:text-gray-500/75"
-                    href="#"
-                  >
-                    {" "}
-                    Blog{" "}
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <LocalButtons />
-
-            <div className="block md:hidden">
-              <button className="rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
+    <div className=" sticky top-0 z-20 w-full bg-[#B4B4B8] border-b-2 border-black shadow-lg">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
+        <div className="inline-flex items-center space-x-2">
+          <span>
+            <img
+              class="inline-block h-14 w-14 rounded-full"
+              src="https://cdn.pixabay.com/photo/2016/04/15/18/05/computer-1331579_640.png"
+              alt="logo"
+            />
+          </span>
+          <span className="font-bold">User Management</span>
+        </div>
+        <div className="hidden lg:block">
+          <ul className="inline-flex space-x-8">
+            {menuItems.map((item) => (
+              <li key={item.name}>
+                <a
+                  href={item.href}
+                  className="text-lg p-2 rounded-md font-semibold text-gray-800 hover:bg-orange-600 hover:text-gray-200 "
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
+                  {item.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="hidden lg:block">
+         
+          <LocalButtons/>
+        </div>
+        <div className="lg:hidden">
+          <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer" />
+        </div>
+        {isMenuOpen && (
+          <div className="absolute inset-x-0 top-0 z-50 origin-top-right transform p-2 transition lg:hidden">
+            <div className="divide-y-2 divide-gray-50 rounded-lg bg-[#B4B4B8] shadow-lg ring-1 ring-black ring-opacity-5">
+              <div className="px-5 pb-6 pt-5">
+                <div className="flex items-center justify-between">
+                  <div className="inline-flex items-center space-x-2">
+                    <span>
+                      <img
+                        class="inline-block h-14 w-14 rounded-full"
+                        src="https://cdn.pixabay.com/photo/2016/04/15/18/05/computer-1331579_640.png"
+                        alt="logo"
+                      />
+                    </span>
+                    <span className="font-bold">User Management</span>
+                  </div>
+                  <div className="-mr-2">
+                    <button
+                      type="button"
+                      onClick={toggleMenu}
+                      className="inline-flex items-center justify-center rounded-md p-2 text-gray-900 hover:bg-orange-600 hover:text-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                    >
+                      <span className="sr-only">Close menu</span>
+                      <X className="h-6 w-6" aria-hidden="true" />
+                    </button>
+                  </div>
+                </div>
+                <div className="mt-6">
+                  <nav className="grid gap-y-4">
+                    {menuItems.map((item) => (
+                      <a
+                        key={item.name}
+                        href={item.href}
+                        className="-m-3 flex items-center rounded-md p-3 text-lg font-semibold hover:bg-orange-500"
+                      >
+                        <span className="ml-3 text-base font-medium text-gray-900">
+                          {item.name}
+                        </span>
+                      </a>
+                    ))}
+                  </nav>
+                </div>
+               <LocalButtons/>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
-    </header>
+    </div>
   );
 };
 
