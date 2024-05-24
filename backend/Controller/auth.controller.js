@@ -6,14 +6,21 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-
 // REGISTERED THE NEW USER WITH OTP
 
 const registerUser = async (req, res, next) => {
   try {
-
     //GETTING FORM REQUEST BODY
     const { username, email, password } = req.body;
+
+    //FINDING THE EXISTING USER
+    const user = await AuthModel.findOne({ email });
+
+    if (user) {
+      return res
+        .status(200)
+        .send({ success: true, message: "User Already Exist" });
+    }
 
     // HASH AND SALT THE PASSWORD
     const hashedPassword = await bcrypt.hash(password, 7);
@@ -58,15 +65,13 @@ const registerUser = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
-    console.log('Error Form Registered Controller');
+    console.log("Error Form Registered Controller");
   }
 };
 
-
-// LOGIN THE USER WITH EMAIL AND PASSWORD 
+// LOGIN THE USER WITH EMAIL AND PASSWORD
 const login = async (req, res, next) => {
   try {
-
     //GETTING THE DATA FROM REQUEST BODY
     const { email, password } = req.body;
 
@@ -95,19 +100,15 @@ const login = async (req, res, next) => {
     res.status(200).send({ success: true, message: "Login Successful", token });
   } catch (error) {
     next(error);
-    console.log('Error Form The Login Controller');
+    console.log("Error Form The Login Controller");
   }
 };
-
-
 
 //EMAIL CONFORMATION WITH EMAIL AND OTP
 const conformEmail = async (req, res, next) => {
   try {
-
     //GETTING THE DATA FROM REQUEST BODY
     const { email, otp } = req.body;
-    
 
     //FINDING THE EXISTING USER
     const user = await AuthModel.findOne({ email });
@@ -125,7 +126,6 @@ const conformEmail = async (req, res, next) => {
         .send({ success: true, message: "Email Already Confirmed " });
     }
 
-
     //IF OTP NOT MATCH
     if (user.otp !== otp) {
       return res.status(401).send({ success: false, message: "Invalid OTP" });
@@ -141,18 +141,15 @@ const conformEmail = async (req, res, next) => {
       .send({ success: true, message: "Email confirmed successfully" });
   } catch (error) {
     next(error);
-    console.log('Error Form Conform Email Controller');
+    console.log("Error Form Conform Email Controller");
   }
 };
 
-
-//FORGET PASSWORD CONTROLLER 
+//FORGET PASSWORD CONTROLLER
 const forgetPasswords = async (req, res, next) => {
   try {
-
     //GETTING THE DATA FROM REQUEST BODY
     const { email } = req.body;
-
 
     //FINDING THE EXISTING USER
     const user = await AuthModel.findOne({ email });
@@ -198,18 +195,15 @@ const forgetPasswords = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
-    console.log('Error From Forget Password Controller');
+    console.log("Error From Forget Password Controller");
   }
 };
-
 
 //UPDATE PASSWORD CONTROLLER
 const updatePassword = async (req, res, next) => {
   try {
-
     //GETTING DATA FROM REQUEST BODY
     const { email, newPassword, otp } = req.body;
-
 
     //FINDING THE EXISTING USER
     const user = await AuthModel.findOne({ email });
@@ -228,7 +222,6 @@ const updatePassword = async (req, res, next) => {
     // HASH AND SALT THE PASSWORD
     const hashedPassword = await bcrypt.hash(newPassword, 7);
 
-
     //UPDATE THE PASSWORD
     user.password = hashedPassword;
 
@@ -239,7 +232,7 @@ const updatePassword = async (req, res, next) => {
       .send({ success: true, message: "Password Update Successfully" });
   } catch (error) {
     next(error);
-    console.log('Error Form The Update Password Controller');
+    console.log("Error Form The Update Password Controller");
   }
 };
 

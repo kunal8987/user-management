@@ -1,17 +1,17 @@
 import React from "react";
 import { Menu, X } from "lucide-react";
 import LocalButtons from "./authButton";
+import { Link } from "react-router-dom";
 
 const menuItems = [
   {
     name: "Home",
-    href: "#",
+    href: "/",
   },
   {
     name: "Profile",
-    href: "#",
+    href: "/profile",
   },
-  
 ];
 
 const Navbar = () => {
@@ -38,19 +38,18 @@ const Navbar = () => {
           <ul className="inline-flex space-x-8">
             {menuItems.map((item) => (
               <li key={item.name}>
-                <a
-                  href={item.href}
+                <Link
+                  to={item.href}
                   className="text-lg p-2 rounded-md font-semibold text-gray-800 hover:bg-orange-600 hover:text-gray-200 "
                 >
                   {item.name}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
         </div>
         <div className="hidden lg:block">
-         
-          <LocalButtons/>
+          <LocalButtons />
         </div>
         <div className="lg:hidden">
           <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer" />
@@ -84,19 +83,19 @@ const Navbar = () => {
                 <div className="mt-6">
                   <nav className="grid gap-y-4">
                     {menuItems.map((item) => (
-                      <a
+                      <Link
                         key={item.name}
-                        href={item.href}
+                        to={item.href}
                         className="-m-3 flex items-center rounded-md p-3 text-lg font-semibold hover:bg-orange-500"
                       >
                         <span className="ml-3 text-base font-medium text-gray-900">
                           {item.name}
                         </span>
-                      </a>
+                      </Link>
                     ))}
                   </nav>
                 </div>
-               <LocalButtons/>
+                <LocalButtons />
               </div>
             </div>
           </div>

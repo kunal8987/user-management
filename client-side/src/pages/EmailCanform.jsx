@@ -1,21 +1,23 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import axios from "axios";
 let initialState = {
   email: "",
   otp: "",
 };
-export default function EmailConform() {
+export default function Email() {
   const [fromState, setFromState] = useState(initialState);
-
+  const navigate = useNavigate();
   let handleChange = (e) => {
     let { id, value } = e.target;
     setFromState({ ...fromState, [id]: value });
   };
 
   let handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if(fromState.email===''|| fromState.otp===''){
+    if (fromState.email === "" || fromState.otp === "") {
       Swal.fire({
         position: "center",
         icon: "warning",
@@ -24,8 +26,26 @@ export default function EmailConform() {
         timer: 1500,
       });
     }
-    console.log(fromState);
-  }
+    axios
+      .post(`http://localhost:4500/api/v1/auth/email-conformed`, fromState)
+      .then((response) => {
+        // console.log(response.data);
+
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: response.data.message,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    // console.log(fromState);
+  };
   return (
     <section className="bg-[#E3E1D9] h-svh">
       <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-
+import axios from "axios";
 let initialState = {
   username: "",
   email: "",
@@ -9,7 +10,7 @@ let initialState = {
 
 export default function SignUpThree() {
   const [fromState, setFormState] = useState(initialState);
-
+  const navigate = useNavigate();
   let handleChange = (e) => {
     let { id, value } = e.target;
     setFormState({ ...fromState, [id]: value });
@@ -32,7 +33,26 @@ export default function SignUpThree() {
       });
     }
 
-    console.log(fromState);
+    axios
+      .post(`http://localhost:4500/api/v1/auth/register`, fromState)
+      .then((response) => {
+        // console.log(response.data);
+
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: response.data.message,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+
+        navigate("/email-conformed");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    // console.log(fromState);
   };
   return (
     <section className="bg-[#E3E1D9] h-svh">
@@ -43,13 +63,13 @@ export default function SignUpThree() {
           </h2>
           <p className="mt-2 text-center text-lg text-gray-900">
             Already have an account?{" "}
-            <a
-              href="#"
+            <Link
+              to="/login"
               title=""
               className="font-medium p-1 rounded-sm text-orange-500 hover:bg-orange-600 hover:text-gray-200  text-xl transition-all duration-200 hover:underline"
             >
               Sign In
-            </a>
+            </Link>
           </p>
           <form className="mt-8" onSubmit={handleSubmit}>
             <div className="space-y-5">

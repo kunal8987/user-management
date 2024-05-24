@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import axios from "axios";
+import { AuthContext } from "../context/AuthContextProvider";
+const sessionData = window.sessionStorage;
 let initialState = {
   email: "",
   password: "",
@@ -7,7 +11,8 @@ let initialState = {
 
 export default function Login() {
   const [fromState, setFromState] = useState(initialState);
-
+  const { authState, loginUser } = useContext(AuthContext);
+  const navigate = useNavigate();
   let handleChange = (e) => {
     let { id, value } = e.target;
     setFromState({ ...fromState, [id]: value });
@@ -16,7 +21,7 @@ export default function Login() {
   let handleSubmit = (e) => {
     e.preventDefault();
 
-    if(fromState.password ==='' || fromState.email === '') {
+    if (fromState.password === "" || fromState.email === "") {
       Swal.fire({
         position: "center",
         icon: "warning",
@@ -25,8 +30,28 @@ export default function Login() {
         timer: 1500,
       });
     }
-    console.log(fromState);
-  }
+
+    axios
+      .post(`http://localhost:4500/api/v1/auth/login`, fromState)
+      .then((response) => {
+        // console.log(response.data);
+        loginUser(response.data.token);
+        sessionData.setItem("adminToken", JSON.stringify(response.data.token));
+
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: response.data.message,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+  };
   return (
     <section className="bg-[#E3E1D9] h-svh">
       <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
@@ -36,13 +61,13 @@ export default function Login() {
           </h2>
           <p className="mt-2 text-center text-lg text-gray-800 ">
             Don&apos;t have an account?{" "}
-            <a
-              href="#"
+            <Link
+              to="/register"
               title=""
               className="font-semibold text-xl p-1 rounded-sm text-orange-500 hover:bg-orange-600 hover:text-gray-200 transition-all duration-200 hover:underline"
             >
               Create a free account
-            </a>
+            </Link>
           </p>
           <form onSubmit={handleSubmit} className="mt-8">
             <div className="space-y-5">
@@ -74,14 +99,14 @@ export default function Login() {
                     {" "}
                     Password{" "}
                   </label>
-                  <a
-                    href="#"
+                  <Link
+                    to="/forget-password"
                     title=""
                     className="text-md font-semibold p-1 rounded-sm text-orange-500 hover:bg-orange-600 hover:text-gray-200 hover:underline"
                   >
                     {" "}
                     Forgot password?{" "}
-                  </a>
+                  </Link>
                 </div>
                 <div className="mt-2">
                   <input
