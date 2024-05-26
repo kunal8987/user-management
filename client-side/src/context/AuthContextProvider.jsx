@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createContext } from "react";
 const sessionData = window.sessionStorage;
 export const AuthContext = createContext();
@@ -14,6 +14,7 @@ const AuthContextProvider = ({ children }) => {
   } else {
     state.isAuth = false;
   }
+
   const loginUser = (token) => {
     setState({
       ...state,

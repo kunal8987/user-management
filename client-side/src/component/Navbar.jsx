@@ -9,6 +9,10 @@ const menuItems = [
     href: "/",
   },
   {
+    name: "Create Profile",
+    href: "/create-profile",
+  },
+  {
     name: "Profile",
     href: "/profile",
   },

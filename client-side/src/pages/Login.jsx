@@ -45,12 +45,11 @@ export default function Login() {
           showConfirmButton: false,
           timer: 3000,
         });
-        navigate("/");
+        navigate("/create-profile");
       })
       .catch((error) => {
         console.log(error);
       });
-
   };
   return (
     <section className="bg-[#E3E1D9] h-svh">
