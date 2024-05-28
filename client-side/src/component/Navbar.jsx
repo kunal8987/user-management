@@ -1,26 +1,33 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Menu, X } from "lucide-react";
 import LocalButtons from "./authButton";
 import { Link } from "react-router-dom";
-
-const menuItems = [
-  {
-    name: "Home",
-    href: "/",
-  },
-  {
-    name: "Create Profile",
-    href: "/create-profile",
-  },
-  {
-    name: "Profile",
-    href: "/profile",
-  },
-];
+import { AuthContext } from "../context/AuthContextProvider";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
+  const { authState } = useContext(AuthContext);
+  let menuItems;
+  if (authState.isAuth === true) {
+    menuItems = [
+     
+      {
+        name: "Create Profile",
+        href: "/create-profile",
+      },
+      {
+        name: "Profile",
+        href: "/profile",
+      },
+    ];
+  } else {
+    menuItems = [
+      {
+        name: "Home",
+        href: "/",
+      },
+    ];
+  }
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };

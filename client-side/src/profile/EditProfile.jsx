@@ -1,25 +1,13 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
 const sessionData = window.sessionStorage;
-let initialState = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  address: "",
-  department: "",
-  dob: "",
-  aboutUs: "",
-  city: "",
-  state: "",
-  zipCode: 0,
-  country: "",
-  gender: "",
-  phone: 0,
-};
-const CreateProfile = () => {
-  const [fromState, setFromState] = useState(initialState);
+const EditProfile = () => {
+  const [fromState, setFromState] = useState("");
+  const param = useParams();
+  const navigate = useNavigate();
+  //   console.log(param.id);
 
   let handleChange = (e) => {
     let { id, value } = e.target;
@@ -32,38 +20,34 @@ const CreateProfile = () => {
   };
 
   let token = JSON.parse(sessionData.getItem("adminToken"));
-  let handleSubmit = (e) => {
-    e.preventDefault();
-    if (
-      fromState.firstName === "" ||
-      fromState.lastName === "" ||
-      fromState.email === "" ||
-      fromState.address === "" ||
-      fromState.department === "" ||
-      fromState.dob === "" ||
-      fromState.aboutUs === "" ||
-      fromState.city === "" ||
-      fromState.state === "" ||
-      fromState.zipCode === "" ||
-      fromState.phone === "" ||
-      fromState.country === "" ||
-      fromState.gender === ""
-    ) {
-      Swal.fire({
-        position: "center",
-        icon: "warning",
-        title: "All Fields Are Required!",
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    }
 
-    // console.log(fromState);
-
+  useEffect(() => {
     axios
-      .post(`http://localhost:4500/api/v1/profile/create-profile`, fromState, {
+      .get(`http://localhost:4500/api/v1/profile/get-profile`, {
         headers: { Authorization: `${token}` },
       })
+      .then((response) => {
+        //   console.log(response.data.profile);
+        setFromState(response.data.profile[0]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  //     // console.log(_id);
+
+  let handleSubmit = (e) => {
+    e.preventDefault();
+
+    axios
+      .patch(
+        `http://localhost:4500/api/v1/profile/update-profile/${param.id}`,
+        fromState,
+        {
+          headers: { Authorization: `${token}` },
+        }
+      )
       .then((response) => {
         // console.log(response.data);
 
@@ -74,30 +58,21 @@ const CreateProfile = () => {
           showConfirmButton: false,
           timer: 3000,
         });
-        
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
   return (
     <>
       <section className="bg-[#E3E1D9] h-full">
         <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
           <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
             <h2 className="text-center text-3xl font-bold leading-tight text-black">
-              Create Your Profile
+              Edit Your Profile
             </h2>
-            <p className="mt-2 text-center text-lg text-gray-800 ">
-              Already Have A Profile
-              <Link
-                to="/profile"
-                title=""
-                className="font-semibold text-xl p-1 rounded-sm text-orange-500 hover:bg-orange-600 hover:text-gray-200 transition-all duration-200 hover:underline"
-              >
-                Get The Profile
-              </Link>
-            </p>
+
             <form onSubmit={handleSubmit} className="mt-8">
               <div className="space-y-5">
                 {/* FIRST NAME  */}
@@ -369,7 +344,7 @@ const CreateProfile = () => {
                 </div>
                 <div>
                   <button className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-orange-600">
-                    Create Profile
+                    Submit
                   </button>
                 </div>
               </div>
@@ -381,4 +356,4 @@ const CreateProfile = () => {
   );
 };
 
-export default CreateProfile;
+export default EditProfile;
