@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import axios from "axios";
+const sessionData = window.sessionStorage;
 let initialState = {
   firstName: "",
   lastName: "",
@@ -21,9 +23,15 @@ const CreateProfile = () => {
 
   let handleChange = (e) => {
     let { id, value } = e.target;
-    setFromState({ ...fromState, [id]: value });
+
+    if (id === "phone" || id === "zipCode") {
+      setFromState({ ...fromState, [id]: +value });
+    } else {
+      setFromState({ ...fromState, [id]: value });
+    }
   };
 
+  let token = JSON.parse(sessionData.getItem("adminToken"));
   let handleSubmit = (e) => {
     e.preventDefault();
     if (
@@ -49,6 +57,28 @@ const CreateProfile = () => {
         timer: 1500,
       });
     }
+
+    console.log(fromState);
+
+    axios
+      .post(`http://localhost:4500/api/v1/profile/create-profile`, fromState, {
+        headers: { Authorization: `${token}` },
+      })
+      .then((response) => {
+        console.log(response.data);
+
+        // Swal.fire({
+        //   position: "center",
+        //   icon: "success",
+        //   title: response.data.message,
+        //   showConfirmButton: false,
+        //   timer: 3000,
+        // });
+        // navigate("/create-profile");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <>

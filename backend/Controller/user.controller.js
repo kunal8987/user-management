@@ -1,11 +1,11 @@
-const UserModel = require("../Models/user.model");
+const {UserModel} = require('../Models/user.model')
 
 //CREATE PROFILE FUNCTION
 const createProfiles = async (req, res, next) => {
   try {
-    let newUser = new UserModel(req.body);
-
-    await newUser.save();
+    let user = new UserModel(req.body);
+    // console.log(user);
+    await user.save();
 
     res.status(200).send({
       success: true,
