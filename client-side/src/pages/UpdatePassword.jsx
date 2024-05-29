@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
-
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 let initialState = {
   otp: "",
   email: "",
@@ -8,7 +9,7 @@ let initialState = {
 };
 export default function UpdatePassword() {
   const [fromState, setFormState] = useState(initialState);
-
+  const navigate = useNavigate();
   let handleChange = (e) => {
     let { id, value } = e.target;
     setFormState({ ...fromState, [id]: value });
@@ -31,7 +32,24 @@ export default function UpdatePassword() {
       });
     }
 
-    console.log(fromState);
+    axios
+      .post(`http://localhost:4500/api/v1/auth/update-password`, fromState)
+      .then((response) => {
+        // console.log(response.data);
+
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: response.data.message,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    // console.log(fromState);
   };
   return (
     <section className="bg-[#E3E1D9] h-svh">
@@ -88,7 +106,7 @@ export default function UpdatePassword() {
                     className="text-base font-medium text-gray-900"
                   >
                     {" "}
-                   New Password{" "}
+                    New Password{" "}
                   </label>
                 </div>
                 <div className="mt-2">
@@ -103,10 +121,7 @@ export default function UpdatePassword() {
                 </div>
               </div>
               <div>
-                <button
-                 
-                  className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-orange-600"
-                >
+                <button className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-orange-600">
                   Update Password
                 </button>
               </div>

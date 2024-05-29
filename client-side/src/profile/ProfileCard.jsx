@@ -32,7 +32,7 @@ const ProfileCard = ({
               <img
                 className="relative z-0 inline-block h-15 w-12 rounded-full ring-2 ring-white"
                 src={avatar}
-                alt="Profile Picture"
+                alt="Profile"
               />
             </dd>
           </div>

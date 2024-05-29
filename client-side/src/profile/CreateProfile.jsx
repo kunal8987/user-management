@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
 const sessionData = window.sessionStorage;
@@ -20,7 +20,7 @@ let initialState = {
 };
 const CreateProfile = () => {
   const [fromState, setFromState] = useState(initialState);
-
+const navigate = useNavigate()
   let handleChange = (e) => {
     let { id, value } = e.target;
 
@@ -74,7 +74,7 @@ const CreateProfile = () => {
           showConfirmButton: false,
           timer: 3000,
         });
-        
+         navigate('/profile')
       })
       .catch((error) => {
         console.log(error);

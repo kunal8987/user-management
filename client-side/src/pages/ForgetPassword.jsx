@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 export default function ForgetPassword() {
   const [email, setEmail] = useState("");
-
+  const navigate = useNavigate();
   let handleSubmit = (e) => {
     e.preventDefault();
 
@@ -15,6 +17,23 @@ export default function ForgetPassword() {
         timer: 1500,
       });
     }
+
+    axios
+      .post(`http://localhost:4500/api/v1/auth/forget-password`, email)
+      .then((response) => {
+        console.log(response.data);
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: response.data.message,
+          showConfirmButton: false,
+          timer: 3000,
+        });
+        navigate("/update-password");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     console.log(email);
   };
   return (
